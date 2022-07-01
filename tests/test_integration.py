@@ -1,9 +1,13 @@
 from datetime import datetime
 import unittest
 
+import django
 from django.core.management import call_command
 from django.test import TestCase
-from django.utils.translation import ugettext_lazy as _
+if django.VERSION < (4, 0):
+    from django.utils.translation import ugettext_lazy as _
+else:
+    from django.utils.translation import gettext_lazy as _
 from six import StringIO
 
 from elasticsearch.exceptions import NotFoundError
@@ -122,7 +126,7 @@ class IntegrationTestCase(ESTestCase, TestCase):
             {
                 'title': self.category1.title,
                 'slug': self.category1.slug,
-                'icon': self.category1.icon,
+                'icon': self.category1.icon.url,
             },
             {
                 'title': self.category2.title,
@@ -147,7 +151,7 @@ class IntegrationTestCase(ESTestCase, TestCase):
             'categories': [{
                 'title': self.category1.title,
                 'slug': self.category1.slug,
-                'icon': self.category1.icon,
+                'icon': self.category1.icon.url,
             }]
         })
 
@@ -163,7 +167,7 @@ class IntegrationTestCase(ESTestCase, TestCase):
                 {
                     'title': self.category1.title,
                     'slug': self.category1.slug,
-                    'icon': self.category1.icon,
+                    'icon': self.category1.icon.url,
                 },
                 {
                     'title': self.category2.title,
